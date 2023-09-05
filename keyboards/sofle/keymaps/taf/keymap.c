@@ -1,5 +1,5 @@
 #include QMK_KEYBOARD_H
-#include "oled.c"
+#include "bongocat.c"
 
 #ifdef ENCODER_MAP_ENABLE
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {

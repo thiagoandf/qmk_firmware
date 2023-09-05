@@ -31,7 +31,7 @@ void print_wpm(void) {
     // Increment key count for each keypress
     if (timer_elapsed(start_time) > 1000) { // Update every second
         oled_clear();
-        oled_write_P(PSTR("Speed: "), false);
+        oled_write_P(PSTR("Speed: \n"), false);
 
         uint32_t elapsed_time = timer_elapsed(start_time) / 1000; // Convert to seconds
         uint32_t typing_speed = key_count / elapsed_time;
@@ -42,7 +42,7 @@ void print_wpm(void) {
 
         float accuracy = 100.0 - (error_count * 100.0 / key_count);
         char  accuracy_str[8];
-        snprintf(accuracy_str, sizeof(accuracy_str), "Acc: %.2f%%", accuracy);
+        snprintf(accuracy_str, sizeof(accuracy_str), "Acc: \n %.2f%%", accuracy);
         oled_write_P(PSTR("\n"), false);
         oled_write(accuracy_str, false);
 
@@ -102,10 +102,9 @@ static void print_status_narrow(void) {
 }
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    if (is_keyboard_master()) {
-        return OLED_ROTATION_270;
-    }
-    return rotation;
+    start_time = timer_read();
+
+    return OLED_ROTATION_270;
 }
 
 bool oled_task_user(void) {
