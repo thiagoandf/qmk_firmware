@@ -1,11 +1,5 @@
-/* Code is by foureight84 and modified slightly. This may need some updates for the 2021-08-30 breaking changes.
-Check out their post and other work!
-https://www.reddit.com/r/olkb/comments/lxw6jw/adapted_bongo_cat_animation_to_the_sofle_keyboard/
-https://github.com/foureight84/qmk_firmware/tree/sofle_foureight84 */
 
 #ifdef OLED_ENABLE
-uint32_t oled_timer = 10000; // OLED timeout
-led_t    led_usb_state;
 
 static void print_status_narrow(void) {
     // Print current mode
@@ -39,25 +33,31 @@ static void print_status_narrow(void) {
         default:
             oled_write_ln_P(PSTR("Undef"), false);
     }
-
     oled_write_P(PSTR("\n\n"), false);
     led_t led_usb_state = host_keyboard_led_state();
     oled_write_ln_P(PSTR("CPSLK"), led_usb_state.caps_lock);
 }
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    return OLED_ROTATION_270;
+    if (is_keyboard_master()) {
+        return OLED_ROTATION_270;
+    }
+
+    if (!is_keyboard_master()) {
+        return OLED_ROTATION_270;
+    }
+    return rotation;
 }
 
 /* Animation bit by j-inc https://github.com/qmk/qmk_firmware/tree/master/keyboards/kyria/keymaps/j-inc */
 // WPM-responsive animation stuff here
 #    define IDLE_FRAMES 5
-#    define IDLE_SPEED 20 // below this wpm value your animation will idle. Default 30.
+#    define IDLE_SPEED 0 // below this wpm value your animation will idle
 
 // #define PREP_FRAMES 1 // uncomment if >1
 
 #    define TAP_FRAMES 2
-#    define TAP_SPEED 40 // above this wpm value typing animation to trigger. Default 60.
+#    define TAP_SPEED 20 // above this wpm value typing animation to trigger
 
 #    define ANIM_FRAME_DURATION 200 // how long each frame lasts in ms
 // #define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
@@ -89,26 +89,19 @@ static void render_anim(void) {
     // assumes 1 frame prep stage
     void animation_phase(void) {
         if (get_current_wpm() <= IDLE_SPEED) {
-            /*
-            current_idle_frame = (current_idle_frame + 1) % IDLE_FRAMES;
-            oled_write_raw_P(idle[abs((IDLE_FRAMES-1)-current_idle_frame)], ANIM_SIZE);
-            */
             oled_write_raw_P(idle[0], ANIM_SIZE);
         }
-        /*
-        if(get_current_wpm() >IDLE_SPEED && get_current_wpm() <TAP_SPEED){
-            // oled_write_raw_P(prep[abs((PREP_FRAMES-1)-current_prep_frame)], ANIM_SIZE); // uncomment if IDLE_FRAMES >1
-            oled_write_raw_P(prep[0], ANIM_SIZE);  // remove if IDLE_FRAMES >1
-        }*/
         if (get_current_wpm() >= TAP_SPEED) {
             current_tap_frame = (current_tap_frame + 1) % TAP_FRAMES;
             oled_write_raw_P(tap[abs((TAP_FRAMES - 1) - current_tap_frame)], ANIM_SIZE);
         }
     }
-
-    if (timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
-        anim_timer = timer_read32();
-        animation_phase();
+    if (get_current_wpm() != 000) {
+        if (timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
+            anim_timer = timer_read32();
+            animation_phase();
+        }
+        anim_sleep = timer_read32();
     }
 }
 
@@ -116,11 +109,11 @@ bool oled_task_user(void) {
     if (is_keyboard_master()) {
         print_status_narrow();
     } else {
-        oled_set_cursor(0, 1);
         render_anim();
-        oled_set_cursor(0, 13);
-        oled_write_P(PSTR("WPM: "), false);
-        oled_write(get_u8_str(get_current_wpm(), ' '), false);
+        oled_set_cursor(1, 12);
+        oled_write_P(PSTR("WPM"), false);
+        oled_set_cursor(1, 13);
+        oled_write(get_u8_str(get_current_wpm(), '0'), false);
     }
     return false;
 }
