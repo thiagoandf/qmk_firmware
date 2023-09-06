@@ -52,12 +52,12 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 /* Animation bit by j-inc https://github.com/qmk/qmk_firmware/tree/master/keyboards/kyria/keymaps/j-inc */
 // WPM-responsive animation stuff here
 #    define IDLE_FRAMES 5
-#    define IDLE_SPEED 0 // below this wpm value your animation will idle
+#    define IDLE_SPEED 10 // below this wpm value your animation will idle
 
 // #define PREP_FRAMES 1 // uncomment if >1
 
 #    define TAP_FRAMES 2
-#    define TAP_SPEED 20 // above this wpm value typing animation to trigger
+#    define TAP_SPEED 40 // above this wpm value typing animation to triggere
 
 #    define ANIM_FRAME_DURATION 200 // how long each frame lasts in ms
 // #define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
@@ -102,6 +102,11 @@ static void render_anim(void) {
             animation_phase();
         }
         anim_sleep = timer_read32();
+    } else {
+        if (timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
+            anim_timer = timer_read32();
+            animation_phase();
+        }
     }
 }
 

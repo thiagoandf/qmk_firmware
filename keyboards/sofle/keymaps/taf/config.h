@@ -24,6 +24,7 @@ for more options. */
 #if defined(KEYBOARD_sofle_rev1)
 #    define NO_ACTION_MACRO
 #    define NO_ACTION_FUNCTION
+#    define SPLIT_WPM_ENABLE
 #    define SPLIT_USB_DETECT
 #    define MASTER_LEFT
 #endif
