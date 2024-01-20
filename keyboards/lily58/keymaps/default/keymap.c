@@ -46,10 +46,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   `----------------------------'           '------''--------------------'
  */
 [_LOWER] = LAYOUT(
-  _______, _______ , _______ , _______ , _______ , _______,                           _______,  _______  , _______,  KC_VOLD ,  KC_VOLU ,KC_BSPC,
-  _______,  KC_INS,  KC_PSCR,   KC_APP,  XXXXXXX, XXXXXXX,                        KC_PGUP, _______,   KC_UP, _______,_______, KC_DEL,
-  _______, KC_LALT,  KC_LCTL,  KC_LSFT,  XXXXXXX, KC_CAPS,                       KC_PGDN,  KC_LEFT, KC_DOWN, KC_RGHT,  KC_DEL, _______,
-  _______,KC_UNDO, KC_CUT, KC_COPY, KC_PASTE, XXXXXXX,  _______,       _______,  XXXXXXX, _______, XXXXXXX, _______,   XXXXXXX, _______,
+  _______, KC_F1, KC_F2, KC_F3,   KC_F4,   KC_F5,                       KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10, KC_BSPC,
+  _______, KC_HOME, KC_PGUP,   KC_INS,  KC_HASH, _______,                KC_PGUP, _______,   KC_UP, _______,_______, KC_DEL,
+  _______, KC_END, KC_PGDN,  KC_LSFT,  KC_DLR, _______,              KC_PGDN,  KC_LEFT, KC_DOWN, KC_RGHT,  KC_DEL, _______,
+  _______,KC_LBRC, KC_RBRC, KC_SCLN, KC_COLN, _______,  KC_PSCR,       KC_CAPS,  XXXXXXX, _______, XXXXXXX, _______,   XXXXXXX, _______,
                          _______, _______, _______, _______,       _______, _______, _______, _______
 ),
 /* RAISE
